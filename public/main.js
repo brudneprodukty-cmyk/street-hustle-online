@@ -2,7 +2,7 @@ let playerHitCooldown = 0;
 
 /* ===== INPUT ===== */
 
-document.addEventListener("keydown",(e)=>{
+window.addEventListener("keydown",(e)=>{
   let k = e.key.toLowerCase();
   keys[k] = true;
 
