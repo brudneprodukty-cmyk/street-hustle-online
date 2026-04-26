@@ -18,25 +18,39 @@ io.on("connection", (socket) => {
 
   console.log("Player connected:", socket.id);
 
+  /* CREATE PLAYER */
   players[socket.id] = {
     x: 100,
-    y: 100
+    y: 100,
+    dir: "down",
+    moving: false,
+    frame: 0
   };
 
+  /* SEND ALL PLAYERS TO NEW PLAYER */
   socket.emit("currentPlayers", players);
 
+  /* TELL OTHERS ABOUT NEW PLAYER */
   socket.broadcast.emit("newPlayer", {
     id: socket.id,
     ...players[socket.id]
   });
 
+  /* ===== MOVEMENT + STATE ===== */
   socket.on("move", (data) => {
     if(players[socket.id]){
-      players[socket.id].x = data.x;
-      players[socket.id].y = data.y;
+      players[socket.id] = {
+        ...players[socket.id],
+        x: data.x,
+        y: data.y,
+        dir: data.dir,
+        moving: data.moving,
+        frame: data.frame
+      };
     }
   });
 
+  /* ===== DISCONNECT ===== */
   socket.on("disconnect", () => {
     console.log("Player left:", socket.id);
     delete players[socket.id];
@@ -45,7 +59,7 @@ io.on("connection", (socket) => {
 
 });
 
-/* ===== GAME LOOP ===== */
+/* ===== GAME LOOP (SYNC) ===== */
 setInterval(() => {
   io.emit("updatePlayers", players);
 }, 1000 / 30);
