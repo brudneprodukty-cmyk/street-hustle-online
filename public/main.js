@@ -24,6 +24,38 @@ keys[e.key.toLowerCase()]=false;
 });
 
 
+/* ===== MULTIPLAYER ===== */
+const socket = io();
+
+let otherPlayers = {};
+let myId = null;
+
+/* RECEIVE ALL PLAYERS */
+socket.on("currentPlayers", (players) => {
+  otherPlayers = players;
+});
+
+/* NEW PLAYER JOINED */
+socket.on("newPlayer", (data) => {
+  otherPlayers[data.id] = data;
+});
+
+/* UPDATE PLAYERS */
+socket.on("updatePlayers", (players) => {
+  otherPlayers = players;
+});
+
+/* PLAYER LEFT */
+socket.on("playerDisconnected", (id) => {
+  delete otherPlayers[id];
+});
+
+/* GET YOUR ID */
+socket.on("connect", () => {
+  myId = socket.id;
+});
+
+
 /* ===== PLAYER XP ===== */
 
 if(player.xp === undefined) player.xp = 0;
@@ -607,6 +639,25 @@ ctx.fillText(Math.floor(boss.hp) + " HP", x, y - 20);
     drawTopBar();
   }
 
+ 
+  /* ===== DRAW OTHER PLAYERS ===== */
+for(let id in otherPlayers){
+
+  if(!otherPlayers[id]) continue;
+  if(id === myId) continue;
+
+  let p = otherPlayers[id];
+
+  if(!p.x || !p.y) continue;
+
+  let x = p.x - camera.x;
+  let y = p.y - camera.y;
+
+  ctx.fillStyle = "lime";
+  ctx.fillRect(x, y, 16, 16);
+}
+
+
   /* ===== DEATH SCREEN ===== */
   if(isDead){
 
@@ -779,6 +830,11 @@ function loop(){
     pickup();
     updateMonsters();
     updateBoss();
+    /* SEND POSITION TO SERVER */
+socket.emit("move", {
+  x: player.x,
+  y: player.y
+});
 
     /* ===== MONSTERS → YERATI ===== */
     if(currentMap === "monsters"){
