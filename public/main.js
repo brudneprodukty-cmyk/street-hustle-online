@@ -2,8 +2,6 @@ let playerHitCooldown = 0;
 
 /* ===== INPUT ===== */
 
-const canvas = document.getElementById("game");
-
 document.addEventListener("keydown",(e)=>{
   let k = e.key.toLowerCase();
   keys[k] = true;
@@ -341,7 +339,7 @@ m.kbTimer = 15; // 🔥 ADD THIS
 
 document.addEventListener("click",(e)=>{
 
-  let rect = canvas.getBoundingClientRect();
+  let rect = document.getElementById("game").getBoundingClientRect();
   let mouseX = e.clientX - rect.left + camera.x;
   let mouseY = e.clientY - rect.top + camera.y;
 
