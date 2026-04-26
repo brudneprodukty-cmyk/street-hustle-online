@@ -30,6 +30,8 @@ const socket = io();
 let otherPlayers = {};
 let myId = null;
 
+let lastSend = 0;
+
 /* RECEIVE ALL PLAYERS */
 socket.on("currentPlayers", (players) => {
   otherPlayers = { ...players };
@@ -40,9 +42,29 @@ socket.on("newPlayer", (data) => {
   otherPlayers[data.id] = data;
 });
 
-/* UPDATE PLAYERS */
 socket.on("updatePlayers", (players) => {
-  otherPlayers = { ...players };
+  for(let id in players){
+
+    if(!otherPlayers[id]){
+      otherPlayers[id] = players[id];
+      continue;
+    }
+
+    // set target position (VERY IMPORTANT)
+    let newData = players[id];
+
+otherPlayers[id].tx = newData.x;
+otherPlayers[id].ty = newData.y;
+
+otherPlayers[id].dir = newData.dir;
+otherPlayers[id].moving = newData.moving;
+otherPlayers[id].frame = newData.frame;
+
+// only copy safe data
+otherPlayers[id].dir = newData.dir;
+otherPlayers[id].moving = newData.moving;
+otherPlayers[id].frame = newData.frame;
+  }
 });
 
 /* PLAYER LEFT */
@@ -640,18 +662,19 @@ ctx.fillText(Math.floor(boss.hp) + " HP", x, y - 20);
   }
 
  
-  /* ===== DRAW OTHER PLAYERS ===== */
+/* ===== DRAW OTHER PLAYERS ===== */
 for(let id in otherPlayers){
-
-  if(!otherPlayers[id]) continue;
-  if(id === myId) continue;
 
   let p = otherPlayers[id];
 
-  if(!p.x || !p.y) continue;
+  if(!p) continue;
+  if(id === myId) continue;
 
-  let x = p.x - camera.x;
-  let y = p.y - camera.y;
+  // smooth movement (lerp)
+  if(p.tx !== undefined){
+    p.x += (p.tx - p.x) * 0.1;
+    p.y += (p.ty - p.y) * 0.1;
+  }
 
   drawOtherPlayer(p);
 }
@@ -882,13 +905,18 @@ function loop(){
     updateMonsters();
     updateBoss();
     /* SEND POSITION TO SERVER */
-socket.emit("move", {
-  x: player.x,
-  y: player.y,
-  dir: player.dir,
-  moving: player.moving,
-  frame: player.frame
-});
+let now = Date.now();
+
+if(now - lastSend > 50){ // 20 times/sec
+  socket.emit("move", {
+    x: player.x,
+    y: player.y,
+    dir: player.dir,
+    moving: player.moving,
+    frame: player.frame
+  });
+  lastSend = now;
+}
 
     /* ===== MONSTERS → YERATI ===== */
     if(currentMap === "monsters"){
