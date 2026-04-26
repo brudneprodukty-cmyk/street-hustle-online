@@ -653,8 +653,7 @@ for(let id in otherPlayers){
   let x = p.x - camera.x;
   let y = p.y - camera.y;
 
-  ctx.fillStyle = "lime";
-  ctx.fillRect(x, y, 16, 16);
+  drawOtherPlayer(p);
 }
 
 
@@ -809,6 +808,58 @@ if(equipmentSlots.weapon){
 }
 
 
+function drawOtherPlayer(p){
+
+  let x = p.x - camera.x;
+  let y = p.y - camera.y;
+
+  let bob = Math.sin((p.frame || 0) * 6) * 2;
+
+  /* BODY */
+  ctx.fillStyle = "#0097a7";
+  ctx.fillRect(x+3, y+8 + bob, 14, 14);
+
+  /* HEAD */
+  ctx.fillStyle = "#4dd0e1";
+  ctx.fillRect(x+4, y + bob, 12, 10);
+
+  /* EYES (DIRECTION BASED) */
+  ctx.fillStyle = "black";
+
+  if(p.dir === "right"){
+    ctx.fillRect(x+12, y+3 + bob, 2,2);
+    ctx.fillRect(x+12, y+5 + bob, 2,1);
+  }
+  else if(p.dir === "left"){
+    ctx.fillRect(x+6, y+3 + bob, 2,2);
+    ctx.fillRect(x+6, y+5 + bob, 2,1);
+  }
+  else{
+    ctx.fillRect(x+7, y+3 + bob, 2,2);
+    ctx.fillRect(x+11, y+3 + bob, 2,2);
+  }
+
+  /* FEET ANIMATION */
+  ctx.fillStyle = "#01579b";
+
+  if(p.moving){
+    let step = Math.floor((p.frame || 0) % 2);
+
+    if(step === 0){
+      ctx.fillRect(x+4, y+22, 5,4);
+      ctx.fillRect(x+11, y+24, 5,4);
+    } else {
+      ctx.fillRect(x+4, y+24, 5,4);
+      ctx.fillRect(x+11, y+22, 5,4);
+    }
+  } else {
+    ctx.fillRect(x+4, y+24, 5,4);
+    ctx.fillRect(x+11, y+24, 5,4);
+  }
+}
+
+
+
 /* ===== LOOP ===== */
 
 function loop(){
@@ -833,7 +884,10 @@ function loop(){
     /* SEND POSITION TO SERVER */
 socket.emit("move", {
   x: player.x,
-  y: player.y
+  y: player.y,
+  dir: player.dir,
+  moving: player.moving,
+  frame: player.frame
 });
 
     /* ===== MONSTERS → YERATI ===== */
