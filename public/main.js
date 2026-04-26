@@ -867,7 +867,7 @@ function loop(){
 
   /* PLAYER ANIMATION */
   if(player.moving){
-    player.frame += 0.2;
+    player.frame += 0.1;
   }else{
     player.frame = 0;
   }
