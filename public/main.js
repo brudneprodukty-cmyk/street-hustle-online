@@ -958,11 +958,7 @@ if(now - lastSend > 50){ // 20 times/sec
   updateDeath();
 
   draw();
-  try{
   drawUI();
-}catch(e){
-  console.error("UI ERROR:", e);
-}
 
   requestAnimationFrame(loop);
 }
