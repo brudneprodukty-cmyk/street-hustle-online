@@ -32,7 +32,7 @@ let myId = null;
 
 /* RECEIVE ALL PLAYERS */
 socket.on("currentPlayers", (players) => {
-  otherPlayers = players;
+  otherPlayers = { ...players };
 });
 
 /* NEW PLAYER JOINED */
@@ -42,7 +42,7 @@ socket.on("newPlayer", (data) => {
 
 /* UPDATE PLAYERS */
 socket.on("updatePlayers", (players) => {
-  otherPlayers = players;
+  otherPlayers = { ...players };
 });
 
 /* PLAYER LEFT */
