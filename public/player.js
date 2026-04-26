@@ -4,7 +4,7 @@ let player = {
   x: 25 * TILE,
   y: 25 * TILE,
   size: 20,
-  speed: 3,
+  speed: 1,
 
   hp: 100,
   maxHp: 100,
