@@ -958,6 +958,7 @@ if(now - lastSend > 50){ // 20 times/sec
   updateDeath();
 
   draw();
+  console.log("DRAW UI RUNNING");
   drawUI();
 
   requestAnimationFrame(loop);
