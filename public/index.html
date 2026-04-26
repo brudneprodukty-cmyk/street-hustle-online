@@ -17,6 +17,7 @@ color:white;
 canvas{
 display:none;
 image-rendering: pixelated;
+outline:none;
 }
 
 /* ===== HOME SCREEN ===== */
@@ -34,12 +35,13 @@ background:#000;
 z-index:10;
 }
 
-/* ===== LOGO IMAGE ===== */
+/* ===== LOGO ===== */
 #logo{
-width:590px; /* adjust size here */
+width:350px;
 opacity:0;
 transform:translateY(20px);
 transition:all 1s ease;
+filter: drop-shadow(0 0 15px rgba(150,0,255,0.7));
 }
 
 /* ===== MENU ===== */
@@ -52,7 +54,7 @@ opacity:0;
 transition:1s;
 }
 
-/* ===== CLEAN BUTTONS ===== */
+/* ===== BUTTONS ===== */
 .btn{
 font-size:18px;
 letter-spacing:2px;
@@ -63,7 +65,7 @@ color:white;
 transition:0.3s;
 }
 
-/* underline effect */
+/* underline */
 .btn::after{
 content:"";
 position:absolute;
@@ -75,7 +77,6 @@ background:white;
 transition:0.3s;
 }
 
-/* hover */
 .btn:hover{
 color:#aaa;
 }
@@ -84,22 +85,14 @@ color:#aaa;
 width:100%;
 box-shadow:0 0 10px white;
 }
-
-/* ===== FADE OUT ===== */
-.fadeOut{
-opacity:0 !important;
-pointer-events:none;
-transition:0.8s;
-}
 </style>
 </head>
 <body>
 
-<!-- ===== HOME SCREEN ===== -->
+<!-- ===== HOME ===== -->
 <div id="home">
 
-  <!-- 🔥 YOUR LOGO HERE -->
- <img id="logo" src="images/logo.png">
+  <img id="logo" src="images/logo.png">
 
   <div class="menu" id="menu">
     <div class="btn" onclick="enterGame()">ENTER GAME</div>
@@ -110,7 +103,7 @@ transition:0.8s;
 </div>
 
 <!-- ===== GAME ===== -->
-<canvas id="game"></canvas>
+<canvas id="game" tabindex="1"></canvas>
 <div id="ui"></div>
 <div id="panel"></div>
 
@@ -146,15 +139,29 @@ setTimeout(()=>{
 
 function enterGame(){
 
-  let home = document.getElementById("home");
+  document.getElementById("home").style.display = "none";
 
-  home.classList.add("fadeOut");
+  const canvas = document.getElementById("game");
+  canvas.style.display = "block";
 
-  setTimeout(()=>{
-    home.style.display = "none";
-    document.querySelector("canvas").style.display = "block";
-  },800);
+  // ✅ THIS FIXES YOUR KEYS
+  setTimeout(() => {
+    window.focus();
+    document.body.focus();
+  }, 50);
 }
+
+
+/* 🔥 ALWAYS KEEP FOCUS ON GAME */
+document.body.addEventListener("click", () => {
+  const canvas = document.getElementById("game");
+  if(canvas.style.display === "block"){
+    canvas.focus();
+    window.focus();
+  }
+});
+
+
 
 </script>
 
