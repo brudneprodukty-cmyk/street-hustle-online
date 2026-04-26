@@ -45,25 +45,20 @@ socket.on("newPlayer", (data) => {
 socket.on("updatePlayers", (players) => {
   for(let id in players){
 
+    let newData = players[id];
+    if(!newData) continue;
+
     if(!otherPlayers[id]){
-      otherPlayers[id] = players[id];
+      otherPlayers[id] = newData;
       continue;
     }
 
-    // set target position (VERY IMPORTANT)
-    let newData = players[id];
+    otherPlayers[id].tx = newData.x;
+    otherPlayers[id].ty = newData.y;
 
-otherPlayers[id].tx = newData.x;
-otherPlayers[id].ty = newData.y;
-
-otherPlayers[id].dir = newData.dir;
-otherPlayers[id].moving = newData.moving;
-otherPlayers[id].frame = newData.frame;
-
-// only copy safe data
-otherPlayers[id].dir = newData.dir;
-otherPlayers[id].moving = newData.moving;
-otherPlayers[id].frame = newData.frame;
+    otherPlayers[id].dir = newData.dir;
+    otherPlayers[id].moving = newData.moving;
+    otherPlayers[id].frame = newData.frame;
   }
 });
 
