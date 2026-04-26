@@ -29,31 +29,22 @@ position:fixed;
 top:50%;
 left:50%;
 transform:translate(-50%,-50%);
-
 background:#2b2b2b;
 color:#ddd;
 padding:20px;
 border:3px solid #555;
 border-radius:8px;
-
 display:none;
 min-width:250px;
-
 box-shadow:
 0 0 0 2px #111 inset,
 0 0 15px rgba(0,0,0,0.8);
-
 font-family:Georgia, serif;
-
-/* 🔥 THIS FIXES CLOSE BUTTON WITHOUT BREAKING CENTER */
-position:fixed;
 }
 
-/* ✅ THIS is the correct way to fix close button */
 #panel * {
   position: relative;
 }
-
 
 .slot {
   width: 60px;
@@ -78,9 +69,6 @@ position:fixed;
   height: 70px;
   font-size: 30px;
 }
-
-
-
 </style>
 </head>
 <body>
@@ -89,16 +77,19 @@ position:fixed;
 <div id="ui"></div>
 <div id="panel"></div>
 
-<script src="js/gameState.js"></script>
+<!-- 🔥 SOCKET -->
+<script src="/socket.io/socket.io.js"></script>
 
-<script src="js/core.js"></script>
-<script src="js/player.js"></script>
-<script src="js/npc.js"></script>
-<script src="js/monsters.js"></script>
-<script src="js/items.js"></script>
-<script src="js/map.js"></script>
-<script src="js/ui.js"></script>
-<script src="js/main.js"></script>
+<!-- 🔥 YOUR GAME FILES -->
+<script src="gameState.js"></script>
+<script src="core.js"></script>
+<script src="player.js"></script>
+<script src="npc.js"></script>
+<script src="monsters.js"></script>
+<script src="items.js"></script>
+<script src="map.js"></script>
+<script src="ui.js"></script>
+<script src="main.js"></script>
 
 </body>
 </html>
