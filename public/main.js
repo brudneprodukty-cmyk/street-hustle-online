@@ -1,26 +1,21 @@
-
 let playerHitCooldown = 0;
 
 /* ===== INPUT ===== */
 
+const canvas = document.getElementById("game");
+
 document.addEventListener("keydown",(e)=>{
-let k=e.key.toLowerCase();
-keys[k]=true;
+  let k = e.key.toLowerCase();
+  keys[k] = true;
 
-if(k==="r") togglePanel("stats");
-if(k==="q") togglePanel("equip");
-if(k==="1"){
-  useSkill();
-}
-
-/* SPACE ATTACK */
-if(k===" "){
-  attack();
-}
+  if(k==="r") togglePanel("stats");
+  if(k==="q") togglePanel("equip");
+  if(k==="1") useSkill();
+  if(k===" ") attack();
 });
 
 document.addEventListener("keyup",(e)=>{
-keys[e.key.toLowerCase()]=false;
+  keys[e.key.toLowerCase()] = false;
 });
 
 
