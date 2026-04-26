@@ -1,3 +1,5 @@
+console.log("UI LOADED");
+
 const slotIcons = {
   helmet: "🪖",
   necklace: "📿",
